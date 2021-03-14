@@ -31,7 +31,7 @@ namespace Notes.Controllers
         public async Task<Note> GetNote(int id) => await service.GetNoteAsync(id);
 
         [HttpGet]
-        [Route("/notes?query=string")]
+        [Route("/notes/{query}")]
         public async Task<List<Note>> GetNotes([FromQuery] string query) => await service.GetNotesAsync(query);
 
         [HttpPut]

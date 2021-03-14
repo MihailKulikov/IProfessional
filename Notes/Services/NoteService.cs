@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Notes.Models;
 using Notes.Repositories;
 
@@ -10,7 +11,7 @@ namespace Notes.Services
     {
         private readonly INoteRepository repository;
 
-        public NoteService(INoteRepository repository)
+        public NoteService([FromServices] INoteRepository repository)
         {
             this.repository = repository;
         }
@@ -22,6 +23,7 @@ namespace Notes.Services
         public async Task<List<Note>> GetNotesAsync() => await repository.GetNotesAsync();
         public async Task<Note> GetNoteAsync(int id) => await repository.GetNoteAsync(id);
         public async Task<List<Note>> GetNotesAsync(string query) => await repository.GetNotesAsync(query);
+
         public async Task UpdateNoteAsync(int id, NoteRequest request)
         {
             await repository.UpdateNoteAsync(id, request);

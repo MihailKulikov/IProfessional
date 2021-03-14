@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Notes.DataBase;
 using Notes.Repositories;
 using Notes.Services;
 
@@ -23,8 +25,10 @@ namespace Notes
         {
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Notes", Version = "v1"}); });
-            services.AddSingleton<INoteRepository, NoteRepository>();
-            services.AddSingleton<INoteService, NoteService>();
+            services.AddDbContext<NotesDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("SQLConnectionString")));
+            services.AddTransient<INoteRepository, NoteRepository>();
+            services.AddTransient<INoteService, NoteService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

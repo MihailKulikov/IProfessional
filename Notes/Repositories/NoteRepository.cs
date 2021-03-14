@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Notes.DataBase;
 using Notes.Models;
@@ -12,7 +13,7 @@ namespace Notes.Repositories
     {
         private readonly NotesDbContext context;
 
-        public NoteRepository(NotesDbContext context)
+        public NoteRepository([FromServices] NotesDbContext context)
         {
             this.context = context;
         }
@@ -26,6 +27,7 @@ namespace Notes.Repositories
 
         public async Task<List<Note>> GetNotesAsync() => await context.Notes.ToListAsync();
         public async Task<Note> GetNoteAsync(int id) => await context.Notes.FindAsync(id);
+
         public async Task<List<Note>> GetNotesAsync(string query)
         {
             return await context.Notes.AsQueryable()
@@ -33,7 +35,7 @@ namespace Notes.Repositories
         }
 
         public async Task UpdateNoteAsync(int id, NoteRequest request)
-        { 
+        {
             var note = await context.Notes.FindAsync(id);
             note.Content = request.Content;
             note.Title = request.Title ?? request.Content.Substring(0, Math.Min(50, request.Content.Length));
